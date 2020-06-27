@@ -5,7 +5,7 @@ const Left = () => {
   const [current, setCurrent] = useState("home");
 
   const handleRedirect = (e) => {
-    setCurrent(e);
+    setCurrent(e.key);
   };
 
   return (
@@ -15,8 +15,11 @@ const Left = () => {
       selectedKeys={[current]}
     >
       <Menu.Item key="home">
-        <Link to="/">Home</Link>
+        <Link to="/">หน้าแรก</Link>
       </Menu.Item>
+      {/* <Menu.Item key="vote">
+        <Link to="/vote">ลงคะแนน</Link>
+      </Menu.Item> */}
     </Menu>
   );
 };

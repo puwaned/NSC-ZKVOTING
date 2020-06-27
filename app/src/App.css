@@ -1,10 +1,12 @@
-@import "~antd/dist/antd.css";
-
 .menuBar {
   padding: 0 20px;
   border-bottom: solid 1px #e8e8e8;
   overflow: auto;
   box-shadow: 0 0 30px #f3f1f1;
+
+  position: absolute;
+  width: 100%;
+  min-width: 100vw;
 }
 .logo {
   width: 150px;
@@ -20,9 +22,11 @@
   width: calc(100% - 150px);
   float: left;
 }
+
 .menuCon .ant-menu-item {
-  padding: 0px 5px;
+  padding: 10px 10px;
 }
+
 .menuCon .ant-menu-submenu-title {
   padding: 10px 20px;
 }
@@ -103,10 +107,6 @@
   }
 }
 
-.container-custom {
-  padding: 15px;
-}
-
 .grow {
   transition: all 0.2s ease-in-out;
 }
@@ -114,45 +114,29 @@
   transform: scale(1.1);
 }
 
-.basket {
-  transition: opacity 0.5s;
-  opacity: 1;
-}
-.basket.hide {
-  opacity: 0;
-  pointer-events: none;
+@font-face {
+  font-family: Kanit;
+  src: url("./assets/fonts/Kanit-Medium.ttf");
 }
 
-body {
+body * {
   font-family: "Kanit", sans-serif;
 }
 
-.center-h {
-  display: flex;
-  justify-content: center;
+.grow {
+  transition: all 0.5s ease-in-out;
+}
+.grow:hover {
+  transition: all 0.3s ease-in-out;
+  transform: scale(1.1);
 }
 
-.filled-img {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  border-radius: 5px;
-}
-
-.filled-img > img {
-  flex-shrink: 0;
-  width: 100%;
+.h-100 {
+  min-height: 100vh;
   height: 100%;
-  /* width: 100%; */
-  /* min-width: 100%;
-  min-height: 100%; */
 }
 
-.ant-modal-body {
-  height: 386px;
-}
-
-.ant-card-body {
-  height: 138px;
+.ant-card-meta-title,
+.ant-card-meta-description {
+  text-align: center;
 }

@@ -1,8 +1,13 @@
-import React from "react";
+import React, { lazy } from "react";
 import { Route, Switch, HashRouter, Redirect } from "react-router-dom";
 import "./App.css";
 import Navbar from "./navbar";
 
+//component
+const Home = lazy(() => import("./view/Home"));
+const Vote = lazy(() => import("./view/Vote"));
+
+//App.js
 const App = () => {
   const loading = () => (
     <div className="animated fadeIn pt-3 text-center">
@@ -14,11 +19,17 @@ const App = () => {
       <Navbar />
       <React.Suspense fallback={loading()}>
         <Switch>
-          {/* <Route
-        path="/"
-        name="Login"
-        render={(props) => <Login {...props} />}
-      /> */}
+          <Route
+            path="/"
+            name="Home"
+            exact
+            render={(props) => <Home {...props} />}
+          />
+          <Route
+            path="/vote/:reference"
+            name="Vote"
+            render={(props) => <Vote {...props} />}
+          />
         </Switch>
       </React.Suspense>
     </HashRouter>
