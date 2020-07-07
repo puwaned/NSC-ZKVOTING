@@ -140,3 +140,10 @@ body * {
 .ant-card-meta-description {
   text-align: center;
 }
+
+.ant-card-cover {
+  height: 80%;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}

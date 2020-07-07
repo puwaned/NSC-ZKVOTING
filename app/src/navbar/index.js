@@ -1,17 +1,18 @@
 import React from "react";
-import LeftMenu from "./left";
+// import LeftMenu from "./left";
 import RightMenu from "./right";
+import { withRouter } from "react-router-dom";
 
-const Navbar = () => {
+const Navbar = ({ history }) => {
   return (
     <nav className="menuBar">
       <div className="logo">
-        <a href="/">Zk-voting</a>
+        <a href="#" onClick={() => history.push("/")}>
+          Zk-voting
+        </a>
       </div>
       <div className="menuCon">
-        <div className="leftMenu">
-          <LeftMenu />
-        </div>
+        <div className="leftMenu">{/* <LeftMenu /> */}</div>
         <div className="rightMenu">
           <RightMenu />
         </div>
@@ -19,4 +20,4 @@ const Navbar = () => {
     </nav>
   );
 };
-export default Navbar;
+export default withRouter(Navbar);

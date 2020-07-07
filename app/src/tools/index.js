@@ -1,4 +1,22 @@
-const fetchApi = () => {};
+const api = "http://127.0.0.1:5000";
+
+const fetchAPI = async (method = "POST", path, data = {}) => {
+  try {
+    const url = `${api}${path}`;
+    const res = await fetch(url, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: method || "POST",
+      body: method !== "GET" ? JSON.stringify(data) : null,
+    });
+    const _data = await res.json();
+    return _data;
+  } catch (err) {
+    return { success: false, message: err.message };
+  }
+};
 
 const candidates = [
   {
@@ -27,4 +45,4 @@ const candidates = [
   },
 ];
 
-export { candidates, fetchApi };
+export { candidates, fetchAPI };
