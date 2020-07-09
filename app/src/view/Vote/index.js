@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { candidates, fetchAPI } from "../../tools";
+import firebase from "firebase/app";
+import "firebase/database";
 import { Row, Col, Card, Button, Result, Spin } from "antd";
 import { FileSyncOutlined } from "@ant-design/icons";
 
-const Vote = ({ match, firebase }) => {
+const Vote = ({ match }) => {
   const [candidateInfo, setCandidateInfo] = useState({});
+  // const [voterData, setVoterData] = useState([]);
   const [voteBox, setVoteBox] = useState({
     desc: "พร้อม",
     title: "พร้อมดำเนินการ",
@@ -15,7 +18,7 @@ const Vote = ({ match, firebase }) => {
       icon={<FileSyncOutlined />}
       title="คุณสามารถลงคะแนนได้เพียง 1 ครั้ง!"
       extra={
-        <Button type="primary" size="large" onClick={async () => fetchCheck()}>
+        <Button type="primary" size="large" onClick={async () => startVerify()}>
           กดที่นี่เพื่อเริ่มลงคะแนน
         </Button>
       }
@@ -27,16 +30,65 @@ const Vote = ({ match, firebase }) => {
     if (_info) {
       setCandidateInfo(_info);
     }
-    // firebase.database().ref("/").set({ val: 0 });
-    let ref = firebase.database().ref("/");
-    ref.on("value", (snapshot) => {
-      console.log(snapshot.val());
-    });
   }, [match.params.reference]);
 
-  const fetchCheck = async () => {
-    const result = await fetchAPI("GET", "/");
-    console.log(result);
+  const startVerify = async () => {
+    const fbdata = await getFirebase();
+    // setVoterData(fbdata);
+    setVoteBox({
+      title: "กรุณาวางนิ้วลงบนเครื่องสแกน",
+      desc: "กำลังดำเนินการ",
+    });
+    const result = await fetchAPI("GET", "/getfinger");
+    if (result.success) {
+      setVoteBox((prev) => ({ ...prev, title: "กำลังตรวจสอบลายนิ้วมือ" }));
+      const verify = await fetchAPI("POST", "/verifyfinger", {
+        current_finger: result.data,
+        list_finger: mergeFinger(fbdata),
+      });
+      if (verify.success) {
+        setVoteBox((prev) => ({ ...prev, title: "กำลังตรวจสอบสิทธิ" }));
+        if (!findIsVote(fbdata, verify.data)) {
+          setVoteBox({
+            title: "ยืนยันตัวตนสำเร็จ",
+            desc: "พร้อม",
+          });
+        } else {
+          setVoteBox({
+            title: "คุณได้ทำการลงคะแนนไปแล้ว",
+            desc: "พร้อม",
+          });
+        }
+        console.log(verify);
+      } else {
+        setVoteBox({ title: "ลายนิ้วมือไม่ถูกต้อง", desc: "พร้อม" });
+      }
+    } else {
+      setVoteBox({ title: "พบข้อผิดพลาด", desc: "พร้อม" });
+    }
+  };
+
+  const getFirebase = async () => {
+    // firebase.database().ref("/").set({ val: 0 });
+    let ref = firebase.database().ref("/");
+    const snapshot = await ref.once("value");
+    const data = snapshot.val();
+    const userdata = Object.keys(data).map((key) => {
+      return { secret: key, finger: data[key].finger, isVote: data[key].vote };
+    });
+    return userdata;
+  };
+
+  const mergeFinger = (voter) => {
+    const finger = voter.map((item) => {
+      return item.finger;
+    });
+    return finger.join(",");
+  };
+
+  const findIsVote = (voter, finger) => {
+    const current_voter = voter.find((e) => e.finger === finger);
+    return current_voter.isVote;
   };
 
   return (

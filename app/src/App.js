@@ -1,5 +1,5 @@
 import React, { lazy, useEffect } from "react";
-import firebase from "firebase";
+import firebase from "firebase/app";
 import { Route, Switch, HashRouter, Redirect } from "react-router-dom";
 import "./App.css";
 import Navbar from "./navbar";
